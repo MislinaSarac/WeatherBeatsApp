@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="160dp"
+    android:height="160dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+
+    <!-- Sun rays -->
+    <path
+        android:fillColor="#FFB300"
+        android:pathData="M50,12 L50,18 M50,58 L50,64 M27,38 L21,38 M79,38 L73,38 M33,21 L29,17 M71,55 L67,51 M33,55 L29,51 M71,21 L67,17"
+        android:strokeColor="#FFC107"
+        android:strokeWidth="4"
+        android:strokeLineCap="round" />
+
+    <!-- Sun core -->
+    <path
+        android:fillColor="#FF9800"
+        android:pathData="M50,38m-14,0a14,14 0 1,0 28,0a14,14 0 1,0 -28,0" />
+
+    <!-- Cloud shadow/back -->
+    <path
+        android:fillColor="#1E88E5"
+        android:pathData="M35,68 C30,68 26,64 26,59 C26,54.5 29.5,50.8 33.8,50.1 C35.4,43.2 41.5,38 49,38 C57.8,38 65,45.2 65,54 C65,54.3 65,54.7 64.9,55 C68.9,55.8 72,59.3 72,63.5 C72,68 68.4,71.5 63.9,71.5 L35,68 Z" />
+
+    <!-- Cloud front -->
+    <path
+        android:fillColor="#42A5F5"
+        android:pathData="M30,75 C25,75 21,71 21,66 C21,61.5 24.5,57.8 28.8,57.1 C30.4,50.2 36.5,45 44,45 C52.8,45 60,52.2 60,61 C60,61.3 60,61.7 59.9,62 C63.9,62.8 67,66.3 67,70.5 C67,75 63.4,78.5 58.9,78.5 L30,75 Z" />
+
+    <!-- Music note overlay -->
+    <path
+        android:fillColor="#AB47BC"
+        android:pathData="M62,50 L74,45 L74,62 C72.8,61.4 71.3,61 69.5,61 C65.4,61 62,63.2 62,66 C62,68.8 65.4,71 69.5,71 C73.6,71 77,68.8 77,66 L77,50 L62,55 L62,50 Z" />
+</vector>
