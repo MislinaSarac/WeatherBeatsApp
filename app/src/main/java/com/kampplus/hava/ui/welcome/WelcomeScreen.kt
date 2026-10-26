@@ -24,6 +24,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
 import com.kampplus.hava.R
 import com.kampplus.hava.ui.theme.HavaTheme
 import kotlinx.coroutines.delay
@@ -67,9 +69,11 @@ fun WelcomeScreen(
 
             // Orta Kısım: Hava Durumu Görseli
             Image(
-                painter = painterResource(id = R.drawable.ic_weather_welcome),
+                painter = painterResource(id = R.drawable.weather_icon),
                 contentDescription = "Hava Durumu Görseli",
-                modifier = Modifier.size(200.dp)
+                modifier = Modifier
+                    .size(160.dp)
+                    .clip(RoundedCornerShape(32.dp))
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -79,23 +83,24 @@ fun WelcomeScreen(
                 text = "SENİN GÖKYÜZÜN SENİN ŞARKIN",
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontWeight = FontWeight.ExtraBold,
-                    fontSize = 24.sp,
+                    fontSize = 22.sp,
                     letterSpacing = 1.5.sp
                 ),
                 color = Color.White,
                 textAlign = TextAlign.Center
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             // Alt Başlık
             Text(
                 text = "HAVANA GÖRE MÜZİK",
-                style = MaterialTheme.typography.labelMedium.copy(
+                style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.SemiBold,
+                    fontSize = 15.sp,
                     letterSpacing = 1.5.sp
                 ),
-                color = Color.White.copy(alpha = 0.7f),
+                color = Color.White.copy(alpha = 0.8f),
                 textAlign = TextAlign.Center
             )
 
