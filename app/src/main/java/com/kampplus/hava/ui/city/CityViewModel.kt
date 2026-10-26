@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonSyntaxException
 import com.kampplus.hava.data.CityRepository
+import com.kampplus.hava.data.FavoriteCityManager
 import com.kampplus.hava.data.OpenMeteoCityRepository
 import com.kampplus.hava.model.City
 import com.kampplus.hava.ui.LoadState
@@ -19,36 +20,41 @@ import retrofit2.HttpException
 
 /**
  * Şehir listesi ekranının beyni.
- *
- * Görev dağılımı:
- * - Ekran (Composable) yalnızca çizer.
- * - ViewModel state'i tutar ve kararları verir.
- * - Repository veriyi getirir.
- *
- * ViewModel ekran döndüğünde (Activity yeniden kurulurken) yaşamaya devam eder;
- * bu yüzden arama metni ve sonuçlar kaybolmaz.
- *
- * @param repository Varsayılanı gerçek servis. Testlerde sahte bir repository verilir.
- *   Tüm parametrelerin varsayılanı olduğu için Kotlin parametresiz bir kurucu da üretir;
- *   ekranlarda `viewModel()` bunu kullanabilir.
  */
 class CityViewModel(
     private val repository: CityRepository = OpenMeteoCityRepository()
 ) : ViewModel() {
 
-    // State ViewModel'de MutableStateFlow ile tutulur.
     private val _query = MutableStateFlow("")
     val query: StateFlow<String> = _query.asStateFlow()
 
-    // Varsayılan olarak 3 büyük şehir anında gösterilir (Gecikmesiz açılış).
-    private val _uiState = MutableStateFlow<LoadState<List<City>>>(LoadState.Success(DEFAULT_CITIES))
+    private val _uiState = MutableStateFlow<LoadState<List<City>>>(LoadState.Success(getInitialCities()))
     val uiState: StateFlow<LoadState<List<City>>> = _uiState.asStateFlow()
 
-    /** Kullanıcı arama kutusuna her harf yazdığında çağrılır. */
+    init {
+        // Favori şehirler değiştiğinde arama kutusu boşsa listeyi anında güncelle
+        viewModelScope.launch {
+            FavoriteCityManager.favoriteCities.collect { favs ->
+                if (_query.value.isBlank()) {
+                    val combined = (favs + DEFAULT_CITIES).distinctBy { it.id }
+                    _uiState.value = LoadState.Success(combined)
+                }
+            }
+        }
+    }
+
+    private fun getInitialCities(): List<City> {
+        val favorites = FavoriteCityManager.favoriteCities.value
+        return (favorites + DEFAULT_CITIES).distinctBy { it.id }
+    }
+
+    /** Kullanıcı arama kutusuna her harf yazdığında anında çağrılır ve arama yapar. */
     fun onQueryChange(newQuery: String) {
         _query.value = newQuery
         if (newQuery.isBlank()) {
-            _uiState.value = LoadState.Success(DEFAULT_CITIES)
+            _uiState.value = LoadState.Success(getInitialCities())
+        } else {
+            search()
         }
     }
 
@@ -58,7 +64,7 @@ class CityViewModel(
     fun search() {
         val currentQuery = _query.value.trim()
         if (currentQuery.isEmpty()) {
-            _uiState.value = LoadState.Success(DEFAULT_CITIES)
+            _uiState.value = LoadState.Success(getInitialCities())
             return
         }
 
@@ -89,11 +95,9 @@ class CityViewModel(
     companion object {
         private const val TAG = "CityViewModel"
 
-        /** Varsayılan olarak gösterilen 3 büyük şehir. */
+        /** Varsayılan olarak gösterilen şehir. */
         val DEFAULT_CITIES = listOf(
-            City(745044, "İstanbul", 41.01384, 28.94966, "TR", "Türkiye", "İstanbul"),
-            City(323786, "Ankara", 39.91987, 32.85427, "TR", "Türkiye", "Ankara"),
-            City(311044, "İzmir", 38.41273, 27.13838, "TR", "Türkiye", "İzmir")
+            City(745044, "İstanbul", 41.01384, 28.94966, "TR", "Türkiye", "İstanbul")
         )
     }
 }

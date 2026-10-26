@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.kampplus.hava.data.UserSettingsManager
 import com.kampplus.hava.ui.HavaNavHost
 import com.kampplus.hava.ui.theme.HavaTheme
 
@@ -27,6 +28,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate")
+
+        UserSettingsManager.init(this)
 
         // İçeriği durum ve navigasyon çubuklarının altına kadar yayar.
         enableEdgeToEdge()

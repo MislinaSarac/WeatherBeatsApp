@@ -4,41 +4,60 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.kampplus.hava.model.City
 import com.kampplus.hava.ui.theme.HavaTheme
 
 /**
  * Listedeki tek bir şehir satırı.
  *
- * Yapısı: `Card` → `Row` → rozet + `Spacer` + `Column(weight(1f))` + sağ ok.
- *
- * `Modifier.weight(1f)`: ortadaki sütun kalan boşluğun tamamını kaplar, böylece
- * sağ oku sağ kenara iter. Uzun şehir adları (Afyonkarahisar) rozeti ezmez.
- *
- * @param onClick Karta dokunulduğunda çağrılır. Bileşen ne olacağını bilmez,
- *   yalnızca haber verir — olay yukarı, veri aşağı (state hoisting).
+ * Yapısı: `Card` → `Row` → Sıcaklık Rozeti + `Column(weight(1f))` + Kalp İkonu + 3 Nokta Menü + sağ ok.
  */
 @Composable
-fun CityCard(city: City, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun CityCard(
+    city: City,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    temperature: Int? = null,
+    isFavorite: Boolean = false,
+    onFavoriteClick: (() -> Unit)? = null,
+    onDeleteClick: (() -> Unit)? = null
+) {
+    var menuExpanded by remember { mutableStateOf(false) }
+
     Card(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
@@ -50,26 +69,81 @@ fun CityCard(city: City, onClick: () -> Unit, modifier: Modifier = Modifier) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            CountryBadge(code = city.countryCode)
+            TemperatureBadge(temperature = temperature, countryCode = city.countryCode)
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = city.name,
-                    style = MaterialTheme.typography.titleMedium,
-                    // Tek satıra sığmayan ad "..." ile kısaltılır, satır kaymaz.
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
+                    ),
+                    color = Color(0xFF0A0F2D),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
+                Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = city.subtitle,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
             }
+
+            // Kalp İkonu
+            if (onFavoriteClick != null) {
+                IconButton(onClick = onFavoriteClick) {
+                    Icon(
+                        imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                        contentDescription = "Favoriye ekle",
+                        tint = if (isFavorite) Color(0xFFE53935) else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            // 3 Nokta Menü
+            Box {
+                IconButton(onClick = { menuExpanded = true }) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = "Seçenekler",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                DropdownMenu(
+                    expanded = menuExpanded,
+                    onDismissRequest = { menuExpanded = false }
+                ) {
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                if (isFavorite) "Favorilerden Sil" else "Favorilere Ekle",
+                                color = if (isFavorite) Color(0xFFE53935) else Color.Unspecified
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = if (isFavorite) Icons.Default.Delete else Icons.Filled.Favorite,
+                                contentDescription = null,
+                                tint = if (isFavorite) Color(0xFFE53935) else Color.Unspecified
+                            )
+                        },
+                        onClick = {
+                            menuExpanded = false
+                            if (onDeleteClick != null) {
+                                onDeleteClick()
+                            } else {
+                                onFavoriteClick?.invoke()
+                            }
+                        }
+                    )
+                }
+            }
+
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                // Ok yalnızca görseldir; "dokunulabilir" bilgisini Card zaten verir.
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -78,23 +152,28 @@ fun CityCard(city: City, onClick: () -> Unit, modifier: Modifier = Modifier) {
 }
 
 /**
- * Ülke kodu rozeti ("TR").
- *
- * Veri API'den geldiği için elimizde plaka numarası yok; rozete ülke kodunu
- * koyuyoruz. Kod gelmezse "?" gösterilir.
+ * Derece veya Ülke kodu rozeti.
  */
 @Composable
-private fun CountryBadge(code: String?, modifier: Modifier = Modifier) {
+private fun TemperatureBadge(
+    temperature: Int?,
+    countryCode: String?,
+    modifier: Modifier = Modifier
+) {
+    val badgeText = if (temperature != null) "$temperature°" else (countryCode ?: "TR")
     Surface(
-        modifier = modifier.size(44.dp),
+        modifier = modifier.size(46.dp),
         shape = RoundedCornerShape(12.dp),
         color = Color(0xFF0A0F2D),
         contentColor = Color.White
     ) {
         Box(contentAlignment = Alignment.Center) {
             Text(
-                text = code ?: "?",
-                style = MaterialTheme.typography.labelLarge
+                text = badgeText,
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
             )
         }
     }
@@ -114,7 +193,10 @@ private fun CityCardPreview() {
                 country = "Türkiye",
                 admin1 = "Ankara"
             ),
-            onClick = {}
+            onClick = {},
+            temperature = 23,
+            isFavorite = true,
+            onFavoriteClick = {}
         )
     }
 }

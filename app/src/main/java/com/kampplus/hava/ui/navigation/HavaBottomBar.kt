@@ -6,17 +6,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Place
-import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Place
-import androidx.compose.material.icons.outlined.Refresh
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -34,9 +33,6 @@ import com.kampplus.hava.ui.theme.HavaTheme
 
 /**
  * Uygulama alt gezinti çubuğu (Bottom Navigation Bar).
- *
- * Görseldeki gibi yuvarlatılmış köşelere, seçili olduğunda [Color(0xFF0A0F2D)] (lacivert)
- * rengine ve farklı dolgulu/çizgili (Filled/Outlined) ikon tiplerine sahiptir.
  */
 @Composable
 fun HavaBottomBar(
@@ -46,7 +42,7 @@ fun HavaBottomBar(
 ) {
     val items = listOf(
         BottomNavItem(
-            route = "welcome",
+            route = "home",
             label = "Ana Sayfa",
             selectedIcon = Icons.Filled.Home,
             unselectedIcon = Icons.Outlined.Home
@@ -58,23 +54,17 @@ fun HavaBottomBar(
             unselectedIcon = Icons.Outlined.Place
         ),
         BottomNavItem(
-            route = "history",
-            label = "Geçmişim",
-            selectedIcon = Icons.Filled.Refresh,
-            unselectedIcon = Icons.Outlined.Refresh
-        ),
-        BottomNavItem(
             route = "profile",
-            label = "Profil",
-            selectedIcon = Icons.Filled.Person,
-            unselectedIcon = Icons.Outlined.Person
+            label = "Ayarlar",
+            selectedIcon = Icons.Filled.Settings,
+            unselectedIcon = Icons.Outlined.Settings
         )
     )
 
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 8.dp),
+            .padding(horizontal = 16.dp, vertical = 6.dp),
         shape = RoundedCornerShape(24.dp),
         color = Color.White,
         shadowElevation = 8.dp
@@ -82,7 +72,7 @@ fun HavaBottomBar(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(68.dp),
+                .height(66.dp),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -102,20 +92,21 @@ fun HavaBottomBar(
                             selected = isSelected,
                             onClick = { onNavigate(item.route) }
                         )
-                        .padding(vertical = 8.dp),
+                        .padding(vertical = 6.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
                     Icon(
                         imageVector = icon,
                         contentDescription = item.label,
-                        tint = iconColor
+                        tint = iconColor,
+                        modifier = Modifier.size(28.dp)
                     )
                     Text(
                         text = item.label,
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontSize = 11.sp,
-                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
                         ),
                         color = textColor
                     )
@@ -137,7 +128,7 @@ private data class BottomNavItem(
 fun HavaBottomBarPreview() {
     HavaTheme {
         HavaBottomBar(
-            currentRoute = "welcome",
+            currentRoute = "home",
             onNavigate = {}
         )
     }

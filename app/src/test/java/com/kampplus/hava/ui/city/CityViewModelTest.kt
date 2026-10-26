@@ -31,12 +31,12 @@ class CityViewModelTest {
     private fun createViewModel() = CityViewModel(repository)
 
     @Test
-    fun `baslangicta varsayilan 3 buyuk sehir aninda gosterilir`() = runTest {
+    fun `baslangicta varsayilan favori sehir aninda gosterilir`() = runTest {
         val viewModel = createViewModel()
 
         val state = viewModel.uiState.value
         assertTrue(state is LoadState.Success)
-        assertEquals(3, (state as LoadState.Success).data.size)
+        assertEquals(1, (state as LoadState.Success).data.size)
         assertEquals("", viewModel.query.value)
     }
 
@@ -107,7 +107,7 @@ class CityViewModelTest {
         viewModel.onQueryChange("")
         val state = viewModel.uiState.value
         assertTrue(state is LoadState.Success)
-        assertEquals(3, (state as LoadState.Success).data.size)
+        assertEquals(1, (state as LoadState.Success).data.size)
     }
 
     @Test

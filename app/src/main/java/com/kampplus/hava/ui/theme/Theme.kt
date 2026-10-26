@@ -5,10 +5,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.kampplus.hava.data.AppThemeSetting
+import com.kampplus.hava.data.UserSettingsManager
 
 /**
- * Açık tema paleti. Her Material rolü ([Color.kt]'deki) bir renge bağlanır:
- * `primary` ana vurgu, `surface` kart zemini, `onSurface` o zemindeki yazı rengidir.
+ * Açık tema paleti.
  */
 private val LightColors = lightColorScheme(
     primary = Teal40,
@@ -27,7 +30,7 @@ private val LightColors = lightColorScheme(
     error = Red40
 )
 
-/** Koyu tema paleti. Aynı roller, koyu zemine uygun tonlarla. */
+/** Koyu tema paleti. */
 private val DarkColors = darkColorScheme(
     primary = Teal80,
     onPrimary = Teal20,
@@ -43,15 +46,22 @@ private val DarkColors = darkColorScheme(
 )
 
 /**
- * Uygulamanın teması. Bütün ekranlar bunun içine sarmalanır.
- *
- * @param darkTheme Varsayılan olarak telefonun sistem ayarını izler
- *   ([isSystemInDarkTheme]). @Preview'larda elle `true` verip koyu temayı deneyebilirsin.
+ * Uygulamanın teması. [UserSettingsManager.themeSetting] durumuna göre dinamik güncellenir.
  */
 @Composable
-fun HavaTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+fun HavaTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    val themeSetting by UserSettingsManager.themeSetting.collectAsStateWithLifecycle()
+    val isDark = when (themeSetting) {
+        AppThemeSetting.DARK -> true
+        AppThemeSetting.LIGHT -> false
+        AppThemeSetting.SYSTEM -> darkTheme
+    }
+
     MaterialTheme(
-        colorScheme = if (darkTheme) DarkColors else LightColors,
+        colorScheme = if (isDark) DarkColors else LightColors,
         typography = HavaTypography,
         content = content
     )

@@ -1,6 +1,5 @@
 package com.kampplus.hava.ui.welcome
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -11,13 +10,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -30,18 +26,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kampplus.hava.R
 import com.kampplus.hava.ui.theme.HavaTheme
+import kotlinx.coroutines.delay
 
 /**
- * Uygulamanın karşılama / giriş ekranı.
- *
- * Koyu ve mor tonlarında dikey gradyan arka plan, hava durumu görseli ve
- * oval hatlı (pill shape) beyaz çerçeveli buton içerir.
+ * Uygulamanın sade karşılama / giriş splash ekranı.
+ * 0.10 saniye (100 ms) sonra anında Ana Sayfa'ya geçer.
  */
 @Composable
 fun WelcomeScreen(
-    onNavigateToCities: () -> Unit,
+    onNavigateToHome: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    LaunchedEffect(Unit) {
+        delay(100L)
+        onNavigateToHome()
+    }
+
     val backgroundGradient = Brush.verticalGradient(
         colors = listOf(
             Color(0xFF030718),
@@ -59,7 +59,7 @@ fun WelcomeScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(32.dp),
+                .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -72,24 +72,25 @@ fun WelcomeScreen(
                 modifier = Modifier.size(200.dp)
             )
 
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             // Başlık
             Text(
-                text = "HAVA DURUMU",
+                text = "SENİN GÖKYÜZÜN SENİN ŞARKIN",
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontWeight = FontWeight.ExtraBold,
-                    letterSpacing = 2.sp
+                    fontSize = 24.sp,
+                    letterSpacing = 1.5.sp
                 ),
                 color = Color.White,
                 textAlign = TextAlign.Center
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             // Alt Başlık
             Text(
-                text = "TÜRKİYE GENELİ ANLIK BİLGİ VE TAHMİNLER",
+                text = "HAVANA GÖRE MÜZİK",
                 style = MaterialTheme.typography.labelMedium.copy(
                     fontWeight = FontWeight.SemiBold,
                     letterSpacing = 1.5.sp
@@ -99,31 +100,6 @@ fun WelcomeScreen(
             )
 
             Spacer(modifier = Modifier.weight(1f))
-
-            // Buton: Fotoğraftaki gibi oval hatlı, şeffaf içli ve beyaz çerçeveli
-            OutlinedButton(
-                onClick = onNavigateToCities,
-                shape = RoundedCornerShape(50),
-                border = BorderStroke(1.5.dp, Color.White),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = Color.White
-                ),
-                modifier = Modifier
-                    .width(240.dp)
-                    .height(52.dp)
-            ) {
-                Text(
-                    text = "ŞEHİRLERİ İNCELE",
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.sp
-                    ),
-                    color = Color.White
-                )
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
@@ -132,6 +108,6 @@ fun WelcomeScreen(
 @Composable
 fun WelcomeScreenPreview() {
     HavaTheme {
-        WelcomeScreen(onNavigateToCities = {})
+        WelcomeScreen(onNavigateToHome = {})
     }
 }
