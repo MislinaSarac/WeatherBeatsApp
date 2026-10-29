@@ -56,9 +56,7 @@ import com.kampplus.hava.ui.theme.HavaTheme
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(
-    modifier: Modifier = Modifier
-) {
+fun ProfileScreen(modifier: Modifier = Modifier) {
     val tempUnit by UserSettingsManager.temperatureUnit.collectAsStateWithLifecycle()
     val appTheme by UserSettingsManager.themeSetting.collectAsStateWithLifecycle()
     var showThemeDialog by remember { mutableStateOf(false) }
@@ -225,13 +223,7 @@ fun ProfileScreen(
 }
 
 @Composable
-private fun SettingsRowItem(
-    icon: ImageVector,
-    title: String,
-    subtitle: String,
-    showArrow: Boolean = true,
-    onClick: () -> Unit = {}
-) {
+private fun SettingsRowItem(icon: ImageVector, title: String, subtitle: String, showArrow: Boolean = true, onClick: () -> Unit = {}) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

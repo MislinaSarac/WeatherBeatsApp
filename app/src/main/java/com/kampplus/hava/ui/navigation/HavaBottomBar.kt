@@ -35,11 +35,7 @@ import com.kampplus.hava.ui.theme.HavaTheme
  * Uygulama alt gezinti çubuğu (Bottom Navigation Bar).
  */
 @Composable
-fun HavaBottomBar(
-    currentRoute: String,
-    onNavigate: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
+fun HavaBottomBar(currentRoute: String, onNavigate: (String) -> Unit, modifier: Modifier = Modifier) {
     val items = listOf(
         BottomNavItem(
             route = "home",

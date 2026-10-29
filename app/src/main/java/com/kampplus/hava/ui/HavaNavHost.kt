@@ -43,10 +43,7 @@ import com.kampplus.hava.ui.welcome.WelcomeScreen
  * Uygulamanın kaydırmaya duyarlı yüzen alt gezinti çubuğu ile birlikte tüm ekranları ve geçişleri.
  */
 @Composable
-fun HavaNavHost(
-    modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
-) {
+fun HavaNavHost(modifier: Modifier = Modifier, navController: NavHostController = rememberNavController()) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: SPLASH_ROUTE
 

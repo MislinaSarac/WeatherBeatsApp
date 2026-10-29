@@ -155,11 +155,7 @@ fun CityCard(
  * Derece veya Ülke kodu rozeti.
  */
 @Composable
-private fun TemperatureBadge(
-    temperature: Int?,
-    countryCode: String?,
-    modifier: Modifier = Modifier
-) {
+private fun TemperatureBadge(temperature: Int?, countryCode: String?, modifier: Modifier = Modifier) {
     val badgeText = if (temperature != null) "$temperature°" else (countryCode ?: "TR")
     Surface(
         modifier = modifier.size(46.dp),

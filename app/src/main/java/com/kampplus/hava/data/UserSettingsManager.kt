@@ -2,10 +2,10 @@ package com.kampplus.hava.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlin.math.roundToInt
 
 enum class TemperatureUnit(val label: String, val symbol: String) {
     CELSIUS("Santigrat (°C)", "°C"),

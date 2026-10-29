@@ -81,10 +81,7 @@ import kotlinx.coroutines.launch
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
-    onCityClick: (City) -> Unit,
-    modifier: Modifier = Modifier
-) {
+fun HomeScreen(onCityClick: (City) -> Unit, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val favoriteCities by FavoriteCityManager.favoriteCities.collectAsStateWithLifecycle()
@@ -108,8 +105,10 @@ fun HomeScreen(
     }
 
     fun handleLocationClick() {
-        val hasFine = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        val hasCoarse = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val hasFine =
+            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val hasCoarse =
+            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
         if (hasFine || hasCoarse) {
             coroutineScope.launch {
@@ -365,10 +364,7 @@ fun HomeScreen(
  * Üst Sabit Merhaba Başlığı ve Vurgulu Tavsiye Mesajı (Sağda Lacivert Konum İkonu ve Altında Metin).
  */
 @Composable
-private fun WeatherGreetingHeader(
-    condition: WeatherCondition,
-    onLocationClick: () -> Unit = {}
-) {
+private fun WeatherGreetingHeader(condition: WeatherCondition, onLocationClick: () -> Unit = {}) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -505,11 +501,7 @@ private fun getWeatherCardGradient(condition: WeatherCondition): Brush {
  * Havaya göre rengi değişen detaylı Hava Durumu Kartı.
  */
 @Composable
-private fun HeroWeatherCard(
-    city: City,
-    forecast: Forecast?,
-    onClick: () -> Unit
-) {
+private fun HeroWeatherCard(city: City, forecast: Forecast?, onClick: () -> Unit) {
     val condition = forecast?.current?.let { WeatherCondition.fromWeatherCode(it.weatherCode) } ?: WeatherCondition.CLEAR
     val cardGradient = getWeatherCardGradient(condition)
 
@@ -643,7 +635,9 @@ private fun HeroWeatherCard(
                                         color = Color.White
                                     )
                                     Text(
-                                        text = "${UserSettingsManager.formatTemp(day.minTemperatureC)} / ${UserSettingsManager.formatTemp(day.maxTemperatureC)}",
+                                        text = "${UserSettingsManager.formatTemp(
+                                            day.minTemperatureC
+                                        )} / ${UserSettingsManager.formatTemp(day.maxTemperatureC)}",
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = Color.White.copy(alpha = 0.9f)
                                     )
@@ -695,11 +689,7 @@ private fun WeatherMetricPill(label: String, value: String, emoji: String) {
 }
 
 @Composable
-private fun SimpleCityWeatherCard(
-    city: City,
-    forecast: Forecast?,
-    onClick: () -> Unit
-) {
+private fun SimpleCityWeatherCard(city: City, forecast: Forecast?, onClick: () -> Unit) {
     CityCard(
         city = city,
         onClick = onClick,

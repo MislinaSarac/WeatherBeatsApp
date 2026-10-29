@@ -22,10 +22,7 @@ data class WeatherMusicRecommendation(
 
 object MusicPlaylistHelper {
 
-    fun getRecommendation(
-        condition: WeatherCondition,
-        selectedMood: UserMood? = null
-    ): WeatherMusicRecommendation {
+    fun getRecommendation(condition: WeatherCondition, selectedMood: UserMood? = null): WeatherMusicRecommendation {
         if (selectedMood != null) {
             return when (selectedMood) {
                 UserMood.HAPPY -> WeatherMusicRecommendation(

@@ -66,11 +66,7 @@ import com.kampplus.hava.ui.theme.HavaTheme
 import kotlin.math.roundToInt
 
 @Composable
-fun CityRoute(
-    onCityClick: (City) -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: CityViewModel = viewModel()
-) {
+fun CityRoute(onCityClick: (City) -> Unit, modifier: Modifier = Modifier, viewModel: CityViewModel = viewModel()) {
     val query by viewModel.query.collectAsStateWithLifecycle()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val favoriteCityIds by FavoriteCityManager.favoriteCityIds.collectAsStateWithLifecycle()
@@ -190,12 +186,7 @@ fun CityScreen(
 }
 
 @Composable
-private fun SearchBar(
-    query: String,
-    onQueryChange: (String) -> Unit,
-    onSearch: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+private fun SearchBar(query: String, onQueryChange: (String) -> Unit, onSearch: () -> Unit, modifier: Modifier = Modifier) {
     val keyboardController = LocalSoftwareKeyboardController.current
     OutlinedTextField(
         value = query,

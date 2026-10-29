@@ -43,6 +43,7 @@ object LocationHelper {
     private fun getCityNameFromLocation(context: Context, lat: Double, lon: Double): String {
         return try {
             val geocoder = Geocoder(context, Locale.forLanguageTag("tr-TR"))
+
             @Suppress("DEPRECATION")
             val addresses = geocoder.getFromLocation(lat, lon, 1)
             val address = addresses?.firstOrNull()

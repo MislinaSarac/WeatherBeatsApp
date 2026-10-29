@@ -49,10 +49,7 @@ private val DarkColors = darkColorScheme(
  * Uygulamanın teması. [UserSettingsManager.themeSetting] durumuna göre dinamik güncellenir.
  */
 @Composable
-fun HavaTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
-) {
+fun HavaTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
     val themeSetting by UserSettingsManager.themeSetting.collectAsStateWithLifecycle()
     val isDark = when (themeSetting) {
         AppThemeSetting.DARK -> true
